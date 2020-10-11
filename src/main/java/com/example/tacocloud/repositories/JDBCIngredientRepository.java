@@ -1,4 +1,4 @@
-package com.example.repositories;
+package com.example.tacocloud.repositories;
 
 import com.example.tacocloud.domain.Ingredient;
 import com.example.tacocloud.domain.Type;
@@ -27,10 +27,27 @@ public class JDBCIngredientRepository implements IngredientRepository {
 
 
     @Override
-    public Ingredient findOne(String id) {
+    public Ingredient findById(String id) {
         return jdbcTemplate.queryForObject("select id, name, type from Ingredient where id=?",
                 this::mapRowToIngredient, id);
     }
+
+    /*
+  @Override
+  public Ingredient findOne(String id) {
+    return jdbc.queryForObject(
+        "select id, name, type from Ingredient where id=?",
+        new RowMapper<Ingredient>() {
+          public Ingredient mapRow(ResultSet rs, int rowNum)
+              throws SQLException {
+            return new Ingredient(
+                rs.getString("id"),
+                rs.getString("name"),
+                Ingredient.Type.valueOf(rs.getString("type")));
+          };
+        }, id);
+  }
+   */
 
     @Override
     public Ingredient save(Ingredient ingredient) {
