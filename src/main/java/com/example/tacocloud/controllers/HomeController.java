@@ -2,12 +2,15 @@ package com.example.tacocloud.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Controller
-public class HomeController {
+public class HomeController implements WebMvcConfigurer {
 
-    @GetMapping("/")
-    public String home(){
-        return "home";
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("home");
     }
+
 }
