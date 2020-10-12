@@ -28,7 +28,7 @@ public class Order {
     @NotBlank(message = "Zip is required")
     private String zip;
 
-    @CreditCardNumber
+//    @CreditCardNumber
     private String ccNumber;
 
     @Pattern(regexp = "^(0[1-9]|1[0-2])([\\/])([1-9][0-9])$", message = "Must be formatted MM/YY")
