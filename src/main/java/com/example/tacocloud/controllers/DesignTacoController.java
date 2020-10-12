@@ -1,9 +1,11 @@
 package com.example.tacocloud.controllers;
 
-import com.example.tacocloud.repositories.IngredientRepository;
 import com.example.tacocloud.domain.Ingredient;
+import com.example.tacocloud.domain.Order;
 import com.example.tacocloud.domain.Taco;
 import com.example.tacocloud.domain.Type;
+import com.example.tacocloud.repositories.IngredientRepository;
+import com.example.tacocloud.repositories.TacoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,10 +26,12 @@ import static com.example.tacocloud.domain.Ingredient.filterByType;
 public class DesignTacoController {
 
     private final IngredientRepository ingredientRepository;
+    private final TacoRepository tacoRepository;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepository) {
+    public DesignTacoController(IngredientRepository ingredientRepository, TacoRepository tacoRepository) {
         this.ingredientRepository = ingredientRepository;
+        this.tacoRepository = tacoRepository;
     }
 
 
@@ -43,11 +47,24 @@ public class DesignTacoController {
         return "design";
     }
 
+    @ModelAttribute
+    Taco taco(Taco taco) {
+        return new Taco();
+    }
+
+    @ModelAttribute
+    Order order(Order order) {
+        return new Order();
+    }
+
     @PostMapping
-    public String processDesign(@Valid Taco design, Errors errors) {
+    public String processDesign(@Valid Taco design, Errors errors,
+                                @ModelAttribute Order order) {
         if (errors.hasErrors()) {
             return "design";
         }
+        Taco savedTaco = tacoRepository.save(design);
+        order.addDesign(savedTaco);
         log.info("Processing design: " + design);
         return "redirect:/orders/current";
     }
