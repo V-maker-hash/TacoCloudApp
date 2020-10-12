@@ -12,8 +12,8 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(HomeController.class)
-class HomeControllerTest {
+@WebMvcTest(WebConfig.class)
+class WebConfigTest {
 
     @Autowired
     private MockMvc mockMvc;
