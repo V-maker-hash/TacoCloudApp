@@ -26,11 +26,5 @@ public class Ingredient {
     @Enumerated(value = EnumType.STRING)
     private final Type type;
 
-    public static List<Ingredient> filterByType(List<Ingredient> ingredients, Type type) {
 
-        return ingredients.stream()
-                .filter(x -> x.getType().equals(type))
-                .collect(Collectors.toList());
-
-    }
 }

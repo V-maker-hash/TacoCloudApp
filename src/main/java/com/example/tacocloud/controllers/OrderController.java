@@ -1,7 +1,7 @@
 package com.example.tacocloud.controllers;
 
 import com.example.tacocloud.domain.Order;
-import com.example.tacocloud.repositories.OrderRepository;
+import com.example.tacocloud.jpaRepositories.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

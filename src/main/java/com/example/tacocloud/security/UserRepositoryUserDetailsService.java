@@ -2,9 +2,8 @@ package com.example.tacocloud.security;
 
 import com.example.tacocloud.domain.User;
 import com.example.tacocloud.jpaRepositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 

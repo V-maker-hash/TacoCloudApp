@@ -1,11 +1,9 @@
 package com.example.tacocloud.controllers;
 
-import com.example.tacocloud.domain.Ingredient;
-import com.example.tacocloud.domain.Order;
-import com.example.tacocloud.domain.Taco;
-import com.example.tacocloud.domain.Type;
-import com.example.tacocloud.repositories.IngredientRepository;
-import com.example.tacocloud.repositories.TacoRepository;
+import com.example.tacocloud.domain.*;
+import com.example.tacocloud.jpaRepositories.IngredientRepository;
+import com.example.tacocloud.jpaRepositories.TacoRepository;
+import com.example.tacocloud.jpaRepositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,10 +12,10 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.tacocloud.domain.Ingredient.filterByType;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -27,23 +25,27 @@ public class DesignTacoController {
 
     private final IngredientRepository ingredientRepository;
     private final TacoRepository tacoRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepository, TacoRepository tacoRepository) {
+    public DesignTacoController(IngredientRepository ingredientRepository, TacoRepository tacoRepository, UserRepository userRepository) {
         this.ingredientRepository = ingredientRepository;
         this.tacoRepository = tacoRepository;
+        this.userRepository = userRepository;
     }
 
 
     @GetMapping
-    public String showDesignForm(Model model) {
+    public String showDesignForm(Model model, Principal principal) {
         List<Ingredient> ingredientList = new ArrayList<>();
         ingredientRepository.findAll().forEach(ingredient -> ingredientList.add(ingredient));
         Type[] types = Type.values();
         for (Type type : types) {
             model.addAttribute(type.toString().toLowerCase(), filterByType(ingredientList, type));
         }
-        model.addAttribute("design", new Taco());
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
         return "design";
     }
 
@@ -58,15 +60,27 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processDesign(@Valid Taco design, Errors errors,
-                                @ModelAttribute Order order) {
+    public String processDesign(
+            @Valid Taco taco, Errors errors,
+            @ModelAttribute Order order) {
+
+        log.info("   --- Saving taco");
+
         if (errors.hasErrors()) {
             return "design";
         }
-        Taco savedTaco = tacoRepository.save(design);
-        order.addDesign(savedTaco);
-        log.info("Processing design: " + design);
+
+        Taco saved = tacoRepository.save(taco);
+        order.addDesign(saved);
+
         return "redirect:/orders/current";
     }
 
+    private List<Ingredient> filterByType(List<Ingredient> ingredients, Type type) {
+
+        return ingredients.stream()
+                .filter(x -> x.getType().equals(type))
+                .collect(Collectors.toList());
+
+    }
 }
