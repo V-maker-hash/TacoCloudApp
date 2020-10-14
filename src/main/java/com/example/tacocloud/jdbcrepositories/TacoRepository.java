@@ -1,4 +1,4 @@
-package com.example.tacocloud.repositories;
+package com.example.tacocloud.jdbcrepositories;
 
 import com.example.tacocloud.domain.Taco;
 
