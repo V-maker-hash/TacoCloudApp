@@ -29,6 +29,9 @@ public class Order implements Serializable {
         this.placedAt = new Date();
     }
 
+    @ManyToOne
+    private User user;
+
     @NotBlank(message = "Name is required")
     private String name;
     @NotBlank(message = "Street is required")

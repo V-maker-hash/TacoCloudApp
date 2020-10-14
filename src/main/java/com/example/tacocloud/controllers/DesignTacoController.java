@@ -34,29 +34,33 @@ public class DesignTacoController {
         this.userRepository = userRepository;
     }
 
-
-    @GetMapping
-    public String showDesignForm(Model model, Principal principal) {
-        List<Ingredient> ingredientList = new ArrayList<>();
-        ingredientRepository.findAll().forEach(ingredient -> ingredientList.add(ingredient));
-        Type[] types = Type.values();
-        for (Type type : types) {
-            model.addAttribute(type.toString().toLowerCase(), filterByType(ingredientList, type));
-        }
-        String username = principal.getName();
-        User user = userRepository.findByUsername(username);
-        model.addAttribute("user", user);
-        return "design";
+    @ModelAttribute(name = "order")
+    public Order order() {
+        return new Order();
     }
 
-    @ModelAttribute
-    Taco taco(Taco taco) {
+    @ModelAttribute(name = "design")
+    public Taco design() {
         return new Taco();
     }
 
-    @ModelAttribute
-    Order order(Order order) {
-        return new Order();
+    @GetMapping
+    public String showDesignForm(Model model, Principal principal) {
+        log.info("   --- Designing taco");
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredientRepository.findAll().forEach(i -> ingredients.add(i));
+
+        Type[] types = Type.values();
+        for (Type type : types) {
+            model.addAttribute(type.toString().toLowerCase(),
+                    filterByType(ingredients, type));
+        }
+
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+
+        return "design";
     }
 
     @PostMapping

@@ -18,7 +18,6 @@ public class Taco {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
     private Date createdAt;
 
     @NotNull
