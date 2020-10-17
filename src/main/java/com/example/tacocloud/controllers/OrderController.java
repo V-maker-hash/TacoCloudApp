@@ -20,11 +20,11 @@ import java.awt.print.Pageable;
 public class OrderController {
 
     private OrderRepository orderRepository;
-    private int pageSize = 20;
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
+//    private int pageSize = 20;
+//
+//    public void setPageSize(int pageSize) {
+//        this.pageSize = pageSize;
+//    }
 
     public OrderController(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
@@ -52,14 +52,14 @@ public class OrderController {
         return "orderForm";
     }
 
-    @GetMapping
-    public String ordersForUser(@AuthenticationPrincipal User user,
-                                Model model) {
-        Pageable pageable = (Pageable) PageRequest.of(0, pageSize);
-        model.addAttribute("orders",
-                orderRepository.findByUserOrderByPlacedAtDesc(user, pageable));
-        return "orderList";
-    }
+//    @GetMapping
+//    public String ordersForUser(@AuthenticationPrincipal User user,
+//                                Model model) {
+//        Pageable pageable = (Pageable) PageRequest.of(0, pageSize);
+//        model.addAttribute("orders",
+//                orderRepository.findByUserOrderByPlacedAtDesc(user));
+//        return "orderList";
+//    }
 
     @PostMapping
     public String processOrder(@Valid Order order, Errors errors,
