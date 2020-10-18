@@ -1,6 +1,7 @@
 package com.example.tacocloud.controllers;
 
 import com.example.tacocloud.domain.*;
+import com.example.tacocloud.domain.Ingredient.Type;
 import com.example.tacocloud.jpaRepositories.IngredientRepository;
 import com.example.tacocloud.jpaRepositories.TacoRepository;
 import com.example.tacocloud.jpaRepositories.UserRepository;
@@ -18,20 +19,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@Slf4j
 @RequestMapping("/design")
 @SessionAttributes("order")
+@Slf4j
 public class DesignTacoController {
 
-    private final IngredientRepository ingredientRepository;
-    private final TacoRepository tacoRepository;
-    private UserRepository userRepository;
+    private final IngredientRepository ingredientRepo;
+
+    private TacoRepository tacoRepo;
+
+    private UserRepository userRepo;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepository, TacoRepository tacoRepository, UserRepository userRepository) {
-        this.ingredientRepository = ingredientRepository;
-        this.tacoRepository = tacoRepository;
-        this.userRepository = userRepository;
+    public DesignTacoController(
+            IngredientRepository ingredientRepo,
+            TacoRepository tacoRepo,
+            UserRepository userRepo) {
+        this.ingredientRepo = ingredientRepo;
+        this.tacoRepo = tacoRepo;
+        this.userRepo = userRepo;
     }
 
     @ModelAttribute(name = "order")
@@ -48,7 +54,7 @@ public class DesignTacoController {
     public String showDesignForm(Model model, Principal principal) {
         log.info("   --- Designing taco");
         List<Ingredient> ingredients = new ArrayList<>();
-        ingredientRepository.findAll().forEach(i -> ingredients.add(i));
+        ingredientRepo.findAll().forEach(i -> ingredients.add(i));
 
         Type[] types = Type.values();
         for (Type type : types) {
@@ -57,7 +63,7 @@ public class DesignTacoController {
         }
 
         String username = principal.getName();
-        User user = userRepository.findByUsername(username);
+        User user = userRepo.findByUsername(username);
         model.addAttribute("user", user);
 
         return "design";
@@ -74,17 +80,18 @@ public class DesignTacoController {
             return "design";
         }
 
-        Taco saved = tacoRepository.save(taco);
+        Taco saved = tacoRepo.save(taco);
         order.addDesign(saved);
 
         return "redirect:/orders/current";
     }
 
-    private List<Ingredient> filterByType(List<Ingredient> ingredients, Type type) {
-
-        return ingredients.stream()
+    private List<Ingredient> filterByType(
+            List<Ingredient> ingredients, Type type) {
+        return ingredients
+                .stream()
                 .filter(x -> x.getType().equals(type))
                 .collect(Collectors.toList());
-
     }
+
 }

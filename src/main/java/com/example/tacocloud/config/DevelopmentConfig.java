@@ -1,8 +1,8 @@
 package com.example.tacocloud.config;
 
 import com.example.tacocloud.domain.Ingredient;
-import com.example.tacocloud.domain.Type;
 import com.example.tacocloud.domain.User;
+import com.example.tacocloud.domain.Ingredient.Type;
 import com.example.tacocloud.jpaRepositories.IngredientRepository;
 import com.example.tacocloud.jpaRepositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
